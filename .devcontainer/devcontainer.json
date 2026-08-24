@@ -1,0 +1,21 @@
+{
+    "name": "x-operator-agent",
+    // 既存の docker-compose.yml を参照する設定
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    // コンテナ内に自動導入するVS Code拡張機能
+    "customizations": {
+        "vscode": {
+            // "settings": {
+            //     // コンテナ内のPython 3.12を自動指定
+            //     "python.defaultInterpreterPath": "/usr/local/bin/python"
+            // },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "HashiCorp.terraform"
+            ]
+        }
+    }
+}

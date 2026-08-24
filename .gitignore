@@ -1,0 +1,6 @@
+.env
+*.tfstate
+*.tfstate.backup
+.terraform/
+build/
+lambda_function_payload.zip
