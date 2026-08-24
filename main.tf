@@ -7,7 +7,7 @@ provider "aws" {
 resource "aws_dynamodb_table" "x_operator_agent_table" {
   name           = "x-operator-agent-table"
   billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id" # 主キーを汎用的な名前に変更
+  hash_key       = "id" # 主キーを汎用的な名前で定義
 
   attribute {
     name = "id"
