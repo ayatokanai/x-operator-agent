@@ -36,7 +36,8 @@ def lambda_handler(event, context):
     ai_result = evaluate_and_generate(new_articles)
 
     print("\n【AIの出力結果】\n")
-    print(ai_result)
+    print(type(ai_result))
+    print(ai_result.selected_posts)
     print("\n")
 
     print("=== 投稿履歴と実行日時の保存 ===")

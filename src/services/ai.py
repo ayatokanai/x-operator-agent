@@ -1,11 +1,27 @@
 from google import genai
+from pydantic import BaseModel, Field
 
 from config import GEMINI_API_KEY
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 
-def evaluate_and_generate(articles):
+# 1件ごとの投稿ドラフトデータ
+class PostDraft(BaseModel):
+    url: str = Field(description="元記事のURL")
+    reason: str = Field(description="なぜこの記事を選んだのかの選定理由")
+    expected_score: int = Field(description="エンゲージメントの期待値（1〜10の整数）")
+    draft_text: str = Field(
+        description="X向けの投稿文（140文字程度、ハッシュタグ含む）"
+    )
+
+
+# 投稿ドラフト全体のレスポンス構造（リストを内包する親クラス）
+class CurationResult(BaseModel):
+    selected_posts: list[PostDraft] = Field(description="選定された投稿リスト")
+
+
+def evaluate_and_generate(articles) -> CurationResult:
     """AIに新着記事を渡し、価値の高いものを最大3件選んで投稿文を作成させる"""
     articles_text = ""
     for article in articles:
@@ -16,14 +32,15 @@ def evaluate_and_generate(articles):
 
         【ニュース一覧】
         {articles_text}
-
-        【出力要件】
-        選んだニュースそれぞれについて、以下の形式で出力してください。
-        ---
-        URL: [選んだニュースのURL]
-        投稿ドラフト: [140文字以内のX向け投稿文。ハッシュタグ含む]
         ---
     """
-    chat = client.chats.create(model="gemini-3.6-flash")
+    chat = client.chats.create(
+        model="gemini-3.6-flash",
+        config=genai.types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=CurationResult,
+            temperature=0.2,
+        ),
+    )
     response = chat.send_message(prompt)
-    return response.text.strip()
+    return response.parsed
