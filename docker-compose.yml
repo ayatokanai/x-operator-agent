@@ -12,9 +12,5 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      # ローカルテスト用の環境変数
-      - WEBHOOK_URL=https://discord.com/api/webhooks/your/webhook/url
-      - LLM_API_KEY=your_llm_api_key
-      - DYNAMODB_TABLE=x-operator-agent-table
     stdin_open: true
     tty: true
