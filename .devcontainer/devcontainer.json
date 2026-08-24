@@ -4,16 +4,26 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "workspace",
     "workspaceFolder": "/workspace",
-    // コンテナ内に自動導入するVS Code拡張機能
+    // コンテナ内に自動導入するVS Code拡張機能と設定
     "customizations": {
         "vscode": {
-            // "settings": {
-            //     // コンテナ内のPython 3.12を自動指定
-            //     "python.defaultInterpreterPath": "/usr/local/bin/python"
-            // },
+            "settings": {
+                // コンテナ内のPython 3.12を自動指定
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                // RuffによるLintとフォーマットを有効化
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.fixAll": "explicit",
+                        "source.organizeImports": "explicit"
+                    }
+                }
+            },
             "extensions": [
                 "ms-python.python",
                 "ms-python.vscode-pylance",
+                "charliermarsh.ruff",
                 "HashiCorp.terraform"
             ]
         }
