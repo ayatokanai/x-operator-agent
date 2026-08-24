@@ -1,59 +1,48 @@
-import os
-import time
 import json
-import urllib.request
+from datetime import datetime, timezone
+
 import feedparser
-import boto3
 
-# 環境変数の読み込み
-# DYNAMODB_TABLE = os.environ.get("DYNAMODB_TABLE", "x-operator-agent-table")
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
-LLM_API_KEY = os.environ.get("LLM_API_KEY")
-RSS_URL = "https://news.yahoo.co.jp/rss/topics/it.xml"
+from config import RSS_URL, WEBHOOK_URL
+from services.ai import evaluate_and_generate
+from services.rss import filter_new_articles
+from utils.db import get_last_run_timestamp, update_last_run_timestamp
 
-# dynamodb = boto3.resource("dynamodb")
-# table = dynamodb.Table(DYNAMODB_TABLE)
 
 def lambda_handler(event, context):
-    print("#"*100)
+    print("=== 1. 前回実行日時の取得 ===")
+    last_run_ts = get_last_run_timestamp()
+    print(f"前回実行日時: {datetime.fromtimestamp(last_run_ts, timezone.utc)}")
+
+    # 処理の基準となる「現在時刻」を記録
+    current_ts = datetime.now(timezone.utc).timestamp()
+
+    print("#" * 100)
     print(RSS_URL)
     feed = feedparser.parse(RSS_URL)
-    
-    for entry in feed.entries[:5]:
+    new_articles = filter_new_articles(feed.entries, last_run_ts)
+
+    for entry in new_articles:
         article_url = entry.link
         title = entry.title
         summary = entry.get("summary", "")
-        
-        # # 1. DynamoDBで重複チェック
-        # res = table.get_item(
-        #     Key={"PK": "ACCOUNT#tech_news_ja", "SK": f"ARTICLE#{article_url}"}
-        # )
-        # if "Item" in res:
-        #     continue
-        
-        # # 2. 投稿ドラフト生成 (検証用フォーマット)
-        # post_draft = f"【注目ニュース】\n{title}\n\n要約: {summary[:80]}...\n#TechNews"
-        
-        # # 3. Discord / Slack へWebhook通知
-        # send_webhook(title, article_url, post_draft)
-        
-        # # 4. DynamoDBに履歴保存 (30日TTL)
-        # ttl_expire = int(time.time()) + (30 * 24 * 60 * 60)
-        # table.put_item(
-        #     Item={
-        #         "PK": "ACCOUNT#tech_news_ja",
-        #         "SK": f"ARTICLE#{article_url}",
-        #         "post_draft": post_draft,
-        #         "created_at": int(time.time()),
-        #         "ttl": ttl_expire
-        #     }
-        # )
-        print("="*40)
+        print("=" * 40)
         print(f"Processed successfully: {title}")
         print(f"Processed successfully: {article_url}")
         print(f"Processed successfully: {summary}")
-        print("="*40)
-        break  # 1回の実行で1件処理して終了
+        # break  # 1回の実行で1件処理して終了
+
+    print("=== 3. AIによる価値評価と選定 ===")
+    ai_result = evaluate_and_generate(new_articles)
+
+    print("\n【AIの出力結果】\n")
+    print(ai_result)
+    print("\n")
+
+    print("=== 投稿履歴と実行日時の保存 ===")
+    print(current_ts)
+    # save_posted_history(new_articles, ai_result, current_ts)
+    update_last_run_timestamp(current_ts)
 
     return {"statusCode": 200, "body": json.dumps("Finished")}
 
@@ -74,6 +63,7 @@ def send_webhook(title, url, draft):
     #     headers={"Content-Type": "application/json", "User-Agent": "Lambda-Bot"}
     # )
     # urllib.request.urlopen(req)
+
 
 if __name__ == "__main__":
     # ローカル実行時のエントリーポイント
