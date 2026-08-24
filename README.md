@@ -14,7 +14,7 @@ RSSフィードからのニュースキュレーション、AIによる価値評
   - **DynamoDB**: 処理済み記事の重複管理、投稿履歴などのデータ保存
   - **EventBridge**: 定期的なジョブ実行のスケジューリング（Lambdaのトリガー）
 * **Infrastructure as Code:** Terraform
-* **LLM:** Google Gemini API (`gemini-2.5-flash`)
+* **LLM:** Google Gemini API (`gemini-3.6-flash`)
 * **Environment:** Docker / Docker Compose
 
 ### DynamoDB テーブル設計（シングルテーブル設計）
