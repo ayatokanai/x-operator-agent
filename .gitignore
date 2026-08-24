@@ -4,3 +4,7 @@
 .terraform/
 build/
 lambda_function_payload.zip
+
+# Python
+__pycache__/
+*.pyc
