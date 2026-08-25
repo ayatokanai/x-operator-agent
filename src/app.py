@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import feedparser
 
 from config import RSS_URL, WEBHOOK_URL
-from services.ai import evaluate_and_generate
+from services.ai import evaluate_articles
 from services.rss import filter_new_articles
 from utils.db import get_last_run_timestamp, update_last_run_timestamp
 
@@ -20,20 +20,19 @@ def lambda_handler(event, context):
     print("#" * 100)
     print(RSS_URL)
     feed = feedparser.parse(RSS_URL)
-    new_articles = filter_new_articles(feed.entries, last_run_ts)
+    new_articles = filter_new_articles(feed.entries, last_run_ts)[:30]
 
-    for entry in new_articles:
-        article_url = entry.link
-        title = entry.title
-        summary = entry.get("summary", "")
-        print("=" * 40)
-        print(f"Processed successfully: {title}")
-        print(f"Processed successfully: {article_url}")
-        print(f"Processed successfully: {summary}")
-        # break  # 1回の実行で1件処理して終了
+    # for entry in new_articles:
+    #     article_url = entry.link
+    #     title = entry.title
+    #     summary = entry.get("summary", "")
+    #     print("=" * 40)
+    #     print(f"Processed successfully: {title}")
+    #     print(f"Processed successfully: {article_url}")
+    #     print(f"Processed successfully: {summary}")
 
     print("=== 3. AIによる価値評価と選定 ===")
-    ai_result = evaluate_and_generate(new_articles)
+    ai_result = evaluate_articles(new_articles)
 
     print("\n【AIの出力結果】\n")
     print(type(ai_result))
