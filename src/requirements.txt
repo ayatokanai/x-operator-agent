@@ -2,5 +2,6 @@ feedparser==6.0.11
 requests==2.32.3
 boto3==1.34.0
 google-genai==2.19.0
-pydantic>=2.0
-PyYAML>=6.0
+pydantic==2.13.*
+PyYAML==6.0.*
+trafilatura[all]==2.2.*
