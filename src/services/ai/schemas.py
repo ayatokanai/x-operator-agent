@@ -28,7 +28,7 @@ class PromptConfig(BaseModel):
 
 # 1件ごとの選別結果データ
 class TitleEvaluation(BaseModel):
-    url: str = Field(description="元記事のURL")
+    id: str = Field(description="記事のID")
     reason: str = Field(description="なぜこの記事を選んだのかの選定理由")
     interest_score: int = Field(description="一次注目度（1〜10）")
 

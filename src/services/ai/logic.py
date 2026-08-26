@@ -7,13 +7,13 @@ from .schemas import PromptConfig, TitleEvaluationResult
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 
-def evaluate_titles(articles) -> TitleEvaluationResult:
+def evaluate_titles(articles: dict) -> TitleEvaluationResult:
     """AIに新着記事を渡し、価値の高いものを選ばせる"""
     prompt_config = PromptConfig.load("evaluate_title")
 
     articles_text = ""
-    for article in articles:
-        articles_text += f"タイトル: {article.title}\n要約: {article.get('summary', '')}\n\n"
+    for id, article in articles.items():
+        articles_text += f"ID: {id}\nタイトル: {article.get('title')}\n要約: {article.get('summary', '')}\n---\n"
 
     prompt = prompt_config.template.format(articles_text=articles_text)
 
