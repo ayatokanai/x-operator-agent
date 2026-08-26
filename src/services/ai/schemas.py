@@ -26,15 +26,13 @@ class PromptConfig(BaseModel):
         return cls(**data[task_name])
 
 
-# 1件ごとの投稿ドラフトデータ
-class TitleScreeningDraft(BaseModel):
+# 1件ごとの選別結果データ
+class TitleEvaluation(BaseModel):
     url: str = Field(description="元記事のURL")
     reason: str = Field(description="なぜこの記事を選んだのかの選定理由")
     interest_score: int = Field(description="一次注目度（1〜10）")
 
 
-# 投稿ドラフト全体のレスポンス構造（リストを内包する親クラス）
-class TitleScreeningResult(BaseModel):
-    selected_posts: list[TitleScreeningDraft] = Field(
-        description="選定された投稿リスト"
-    )
+# 選別結果全体のレスポンス構造（結果一覧を内包する親クラス）
+class TitleEvaluationResult(BaseModel):
+    selected_posts: list[TitleEvaluation] = Field(description="選定された投稿リスト")

@@ -1,4 +1,4 @@
-screening:
+evaluate_title:
   model_name: "gemini-3.5-flash-lite"
   temperature: 0.2
   system_instruction: "あなたはテクノロジー・IT分野に特化したX（旧Twitter）運用のエキスパートです。"

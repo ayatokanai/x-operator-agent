@@ -1,1 +1,1 @@
-from .logic import evaluate_articles
+from .logic import evaluate_titles
