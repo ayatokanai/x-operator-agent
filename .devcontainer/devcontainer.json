@@ -10,6 +10,8 @@
             "settings": {
                 // コンテナ内のPython 3.12を自動指定
                 "python.defaultInterpreterPath": "/usr/local/bin/python",
+                // isort(import順序)の警告を無視
+                "ruff.lint.args": ["--ignore", "I"],
                 // RuffによるLintとフォーマットを有効化
                 "[python]": {
                     "editor.defaultFormatter": "charliermarsh.ruff",
