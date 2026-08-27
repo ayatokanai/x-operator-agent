@@ -9,7 +9,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 def evaluate_titles(articles: dict) -> TitleEvaluationResult:
     """AIに新着記事を渡し、価値の高いものを選ばせる"""
-    prompt_config = PromptConfig.load("evaluate_title")
+    prompt_config = PromptConfig.load("evaluate_title_draft")
 
     articles_text = ""
     for id, article in articles.items():
