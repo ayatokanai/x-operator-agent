@@ -67,6 +67,14 @@ class ContentEvaluation(BaseModel):
     interest_score: int = Field(description="本文確認後の注目度・期待値（1〜10）")
     needs_x_research: bool = Field(description="Xリサーチ要否")
     x_research_query: str | None = Field(description="X検索キーワード")
+    manual_action: str | None = Field(description="スクショ撮影や実機検証などの手動対応")
+    affiliate_potential: str | None = Field(description="商品リンク等のアフィリエイト案")
+
+    def log_text(self) -> str:
+        return f"is_adopted: {self.is_adopted}: {self.interest_score}: {self.reason} \n"\
+        f"x_research: {self.needs_x_research}: {self.x_research_query} \n"\
+        f"manual_action: {self.manual_action} \n"\
+        f"affiliate_potential: {self.affiliate_potential}"
 
 
 # # 選別結果全体のレスポンス構造（結果一覧を内包する親クラス）
