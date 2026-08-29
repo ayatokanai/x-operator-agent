@@ -68,6 +68,10 @@ class ContentEvaluation(BaseModel):
     needs_x_research: bool = Field(description="Xリサーチ要否")
     x_research_query: str | None = Field(description="X検索キーワード")
 
+    def log_text(self) -> str:
+        return f"is_adopted: {self.is_adopted}: {self.interest_score}: {self.reason} \n"\
+        f"x_research: {self.needs_x_research}: {self.x_research_query} \n"
+
 
 # 投稿内容データ
 class GeneratedPost(BaseModel):
