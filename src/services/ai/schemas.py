@@ -75,8 +75,3 @@ class ContentEvaluation(BaseModel):
         f"x_research: {self.needs_x_research}: {self.x_research_query} \n"\
         f"manual_action: {self.manual_action} \n"\
         f"affiliate_potential: {self.affiliate_potential}"
-
-
-# # 選別結果全体のレスポンス構造（結果一覧を内包する親クラス）
-# class ContentEvaluationResult(BaseModel):
-#     result_list: list[ContentEvaluation] = Field(description="選定された投稿リスト")
