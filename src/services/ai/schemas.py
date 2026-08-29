@@ -67,11 +67,25 @@ class ContentEvaluation(BaseModel):
     interest_score: int = Field(description="本文確認後の注目度・期待値（1〜10）")
     needs_x_research: bool = Field(description="Xリサーチ要否")
     x_research_query: str | None = Field(description="X検索キーワード")
+
+
+# 投稿内容データ
+class GeneratedPost(BaseModel):
+    post_text: str = Field(description="メインのX投稿本文")
+    reply_thread_text: str | None = Field(
+        default=None,
+        description=(
+            "メイン投稿のリプライ（ツリーの2通目以降）としてぶら下げる補足テキスト。"
+            "アフィリエイト提案や追加の補足情報がある場合のみ作成し、不要なら null。"
+        )
+    )
+    applied_hook: str = Field(description="インプレッション獲得のために意識したフック・共感ポイント（一言メモ）")
     manual_action: str | None = Field(description="スクショ撮影や実機検証などの手動対応")
     affiliate_potential: str | None = Field(description="商品リンク等のアフィリエイト案")
 
     def log_text(self) -> str:
-        return f"is_adopted: {self.is_adopted}: {self.interest_score}: {self.reason} \n"\
-        f"x_research: {self.needs_x_research}: {self.x_research_query} \n"\
+        return f"{self.post_text} \n"\
+        f"reply_thread_text: {self.reply_thread_text} \n"\
+        f"applied_hook: {self.applied_hook}"\
         f"manual_action: {self.manual_action} \n"\
         f"affiliate_potential: {self.affiliate_potential}"

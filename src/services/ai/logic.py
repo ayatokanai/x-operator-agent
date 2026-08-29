@@ -6,6 +6,7 @@ from .schemas import (
     PromptConfig,
     TitleEvaluationResult,
     ContentEvaluation,
+    GeneratedPost
 )
 
 client = genai.Client(api_key=GEMINI_API_KEY)
@@ -57,3 +58,29 @@ def inspect_article_body(article_title: str,
     response = chat.send_message(prompt)
     return response.parsed
 
+
+def fetch_x_sentiments(prompt: str):
+    ...
+
+def write_post(article_title: str,
+               article_body: str):
+    """AIに記事URLを渡して本文を確認させ、投稿価値とXリサーチ価値を検討させる"""
+    prompt_config = PromptConfig.load("write_post")
+
+    prompt = prompt_config.template.format(
+        title=article_title,
+        body=article_body,
+        research_section=""
+    )
+
+    chat = client.chats.create(
+        model=prompt_config.model_name,
+        config=genai.types.GenerateContentConfig(
+            system_instruction=prompt_config.system_instruction,
+            response_mime_type="application/json",
+            response_schema=GeneratedPost,
+            temperature=prompt_config.temperature,
+        ),
+    )
+    response = chat.send_message(prompt)
+    return response.parsed
