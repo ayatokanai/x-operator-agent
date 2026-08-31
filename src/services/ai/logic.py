@@ -63,7 +63,7 @@ def fetch_x_sentiments(prompt: str):
     ...
 
 def write_post(article_title: str,
-               article_body: str):
+               article_body: str) -> GeneratedPost:
     """AIに記事URLを渡して本文を確認させ、投稿価値とXリサーチ価値を検討させる"""
     prompt_config = PromptConfig.load("write_post")
 
