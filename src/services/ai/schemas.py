@@ -59,7 +59,7 @@ class TitleEvaluationResult(BaseModel):
         return passed + waitlist[:needed_count]
 
 
-# 1件ごとの選別結果データ
+# 本文確認後の精査データ
 class ContentEvaluation(BaseModel):
     # url: str = Field(description="元記事のURL")
     is_adopted: bool = Field(description="採否判定")
