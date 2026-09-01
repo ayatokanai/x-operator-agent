@@ -12,10 +12,11 @@ dynamodb = boto3.resource("dynamodb", region_name=REGION)
 table = dynamodb.Table(DYNAMODB_TABLE)
 
 
-def get_last_run_timestamp():
+def get_last_run_timestamp(account_id: str):
     """DynamoDBから前回の実行日時（UNIXタイムスタンプ）を取得する"""
     try:
-        response = table.get_item(Key={"id": "SYSTEM:LAST_RUN"})
+        key = {"PK": f"ACCOUNT#{account_id}", "SK": "SYSTEM:LAST_RUN"}
+        response = table.get_item(Key=key)
         if "Item" in response:
             return float(response["Item"]["timestamp"])
     except Exception as e:
@@ -25,7 +26,7 @@ def get_last_run_timestamp():
     return (datetime.now(timezone.utc) - timedelta(days=1)).timestamp()
 
 
-def update_last_run_timestamp(account_id, now_timestamp):
+def update_last_run_timestamp(account_id: str, now_timestamp):
     """今回の実行日時をDynamoDBに記録する"""
     table.put_item(
         Item={
