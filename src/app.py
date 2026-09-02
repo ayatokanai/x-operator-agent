@@ -53,12 +53,13 @@ def lambda_handler(event, context):
             manual_action=generated_post.manual_action
         )
 
-    save_article_draft(
-        account_id=account_id,
-        source_url=article.get("url"),
-        title_evaluation=title_evaluation,
-        generated_post=generated_post
-    )
+        save_article_draft(
+            account_id=account_id,
+            source_url=article.get("url"),
+            title_evaluation=title_evaluation,
+            generated_post=generated_post
+        )
+
     update_last_run_timestamp(account_id, current_ts)
 
     return {"statusCode": 200, "body": json.dumps("Finished")}
